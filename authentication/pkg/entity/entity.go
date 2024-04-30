@@ -6,7 +6,7 @@ type Entity struct {
 	IsDeleted bool
 }
 
-func NewEntity(id ID, isActive, isDeleted bool) *Entity {
+func NewEntityExists(id ID, isActive, isDeleted bool) *Entity {
 	return &Entity{
 		Id:        id,
 		IsActive:  isActive,
@@ -14,7 +14,7 @@ func NewEntity(id ID, isActive, isDeleted bool) *Entity {
 	}
 }
 
-func NewEntityDefault() *Entity {
+func NewEntity() *Entity {
 	return &Entity{
 		Id:        NewID(),
 		IsActive:  true,
