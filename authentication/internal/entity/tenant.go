@@ -1,15 +1,46 @@
 package entity
 
-import "upse/authentication/pkg/entity"
+import (
+	"upse/authentication/pkg/entity"
+)
 
 type Tenant struct {
 	*entity.Entity
-	Name string
+	Name        string
+	ExternalKey string
 }
 
-func NewTenant(entity *entity.Entity, name string) *Tenant {
-	return &Tenant{
+func NewTenant(name string) (*Tenant, error) {
+
+	entity, err := entity.NewEntity()
+
+	if err != nil {
+		return nil, err
+	}
+
+	tenant := &Tenant{
 		Entity: entity,
 		Name:   name,
 	}
+
+	err = tenant.validate()
+
+	if err != nil {
+		return nil, err
+	}
+
+	return tenant, err
+}
+
+func (t *Tenant) validate() error {
+
+	if t.Name == "" {
+		return entity.ErrNameIsRequired
+	}
+
+	if t.ExternalKey == "" {
+		return entity.ErrExternalKeyIsRequired
+	}
+
+	return nil
 }

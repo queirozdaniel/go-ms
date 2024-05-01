@@ -1,12 +1,5 @@
 package entity
 
-import "errors"
-
-var (
-	ErrIDIsRequired = errors.New("ID is required")
-	ErrInvalidID    = errors.New("invalid ID")
-)
-
 type Entity struct {
 	Id        ID
 	IsActive  bool

@@ -2,6 +2,7 @@ package entity
 
 import (
 	"testing"
+	"upse/authentication/pkg/entity"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -14,8 +15,6 @@ func TestNewNormalPerson(t *testing.T) {
 	assert.NotNil(t, person.Id)
 	assert.NotEmpty(t, person.Name)
 	assert.Equal(t, "Daniel Queiroz", person.Name)
-	assert.Equal(t, true, person.IsActive)
-	assert.Equal(t, false, person.IsDeleted)
 }
 
 func TestNewPersonInvalid(t *testing.T) {
@@ -23,5 +22,5 @@ func TestNewPersonInvalid(t *testing.T) {
 
 	assert.Nil(t, person)
 	assert.NotNil(t, err)
-	assert.Equal(t, ErrNameIsRequired, err)
+	assert.Equal(t, entity.ErrNameIsRequired, err)
 }

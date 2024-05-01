@@ -8,10 +8,34 @@ type Role struct {
 	Resources   []Resource
 }
 
-func NewRole(entity *entity.Entity, description string, resources []Resource) *Role {
-	return &Role{
+func NewRole(description string, resources []Resource) (*Role, error) {
+
+	entity, err := entity.NewEntity()
+
+	if err != nil {
+		return nil, err
+	}
+
+	role := &Role{
 		Entity:      entity,
 		Description: description,
 		Resources:   resources,
 	}
+
+	err = role.validate()
+
+	if err != nil {
+		return nil, err
+	}
+
+	return role, err
+}
+
+func (r *Role) validate() error {
+
+	if r.Description == "" {
+		return entity.ErrDescriptionIsRequired
+	}
+
+	return nil
 }
