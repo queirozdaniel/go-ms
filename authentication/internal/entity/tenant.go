@@ -10,7 +10,7 @@ type Tenant struct {
 	ExternalKey string
 }
 
-func NewTenant(name string) (*Tenant, error) {
+func NewTenant(name, externalKey string) (*Tenant, error) {
 
 	entity, err := entity.NewEntity()
 
@@ -19,8 +19,9 @@ func NewTenant(name string) (*Tenant, error) {
 	}
 
 	tenant := &Tenant{
-		Entity: entity,
-		Name:   name,
+		Entity:      entity,
+		Name:        name,
+		ExternalKey: externalKey,
 	}
 
 	err = tenant.validate()

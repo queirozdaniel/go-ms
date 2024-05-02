@@ -33,6 +33,7 @@ func NewUser(name, email, password string) (*User, error) {
 		Email:    email,
 		Password: password,
 		PersonId: person.Id,
+		Person:   *person,
 	}
 
 	err = user.validate()
