@@ -1,0 +1,17 @@
+version: '3'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
+    restart: always
+    platform: linux/amd64
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: authentication
+      MYSQL_PASSWORD: rooter
+    ports:
+      - 3306:3306
+    mem_limit: 512m
+
+# sudo systemctl start docker.service
