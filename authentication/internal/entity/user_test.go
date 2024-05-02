@@ -15,7 +15,8 @@ func TestNewUser(t *testing.T) {
 	assert.Nil(t, err)
 	assert.NotEmpty(t, user.Name)
 	assert.NotEmpty(t, user.Email)
-	assert.Equal(t, user.Password, "123123")
+	assert.NotEmpty(t, user.Password, "123123")
+	assert.NotEqual(t, user.Password, "123123")
 	assert.Equal(t, user.PersonId, user.Person.Id)
 	assert.Equal(t, user.Name, user.Person.Name)
 }

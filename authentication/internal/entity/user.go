@@ -2,6 +2,8 @@ package entity
 
 import (
 	"upse/authentication/pkg/entity"
+
+	"golang.org/x/crypto/bcrypt"
 )
 
 type User struct {
@@ -41,6 +43,9 @@ func NewUser(name, email, password string) (*User, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	hashPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+	user.Password = string(hashPassword)
 
 	return user, err
 }
