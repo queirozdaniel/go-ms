@@ -1,16 +1,39 @@
 package mysql
 
 import (
+	"database/sql"
+	"log"
+	"testing"
 	"upse/authentication/internal/entity"
 
-	"github.com/stretchr/testify/mock"
+	"github.com/DATA-DOG/go-sqlmock"
+	"github.com/stretchr/testify/assert"
 )
 
-type PersonRepositoryMock struct {
-	mock.Mock
+var person, _ = entity.NewPerson("Daniel Queiroz")
+
+func NewMock() (*sql.DB, sqlmock.Sqlmock) {
+	db, mock, err := sqlmock.New()
+	if err != nil {
+		log.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
+	}
+
+	return db, mock
 }
 
-func (pr *PersonRepositoryMock) CreatePerson(person *entity.Person) error {
-	args := pr.Called(person)
-	return args.Error(0)
+func TestCreatePerson(t *testing.T) {
+	db, mock := NewMock()
+
+	repository := NewPersonRepository(db)
+
+	query := "INSERT INTO person \\(id, name, created_at, updated_at, is_active, is_deleted\\) VALUES \\(\\?, \\?, \\?, \\?, \\?, \\?\\)"
+
+	prep := mock.ExpectPrepare(query)
+	prep.ExpectExec().WithArgs(person.Id, person.Name, person.CreatedAt, person.UpdatedAt, person.IsActive, person.IsDeleted)
+
+	// query := "INSERT INTO users \\(id, name, email, phone\\) VALUES \\(\\?, \\?, \\?, \\?\\)"
+
+	err := repository.CreatePerson(person)
+
+	assert.Nil(t, err)
 }
