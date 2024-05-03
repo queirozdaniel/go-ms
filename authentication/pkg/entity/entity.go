@@ -1,9 +1,13 @@
 package entity
 
+import "time"
+
 type Entity struct {
 	Id        ID
 	IsActive  bool
 	IsDeleted bool
+	CreatedAt time.Time
+	UpdatedAt time.Time
 }
 
 func AlreadyEntity(id string, isActive, isDeleted bool) (*Entity, error) {
@@ -38,6 +42,8 @@ func NewEntity() (*Entity, error) {
 		Id:        NewID(),
 		IsActive:  true,
 		IsDeleted: false,
+		CreatedAt: time.Now().UTC(),
+		UpdatedAt: time.Now().UTC(),
 	}
 
 	err := entity.validate()
