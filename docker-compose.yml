@@ -10,8 +10,17 @@ services:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: authentication
       MYSQL_PASSWORD: rooter
+      MYSQL_ROOT_HOST: '%'
     ports:
       - 3306:3306
     mem_limit: 512m
+    volumes:
+      - /home/daniel/Documentos/mysql:/var/lib/mysql 
+    networks:
+      - db
+
+networks:
+  db:
+    driver: bridge
 
 # sudo systemctl start docker.service
