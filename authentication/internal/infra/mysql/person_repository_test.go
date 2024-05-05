@@ -2,38 +2,54 @@ package mysql
 
 import (
 	"database/sql"
-	"log"
 	"testing"
 	"upse/authentication/internal/entity"
 
-	"github.com/DATA-DOG/go-sqlmock"
-	"github.com/stretchr/testify/assert"
+	_ "github.com/mattn/go-sqlite3"
+	"github.com/stretchr/testify/suite"
 )
 
-var person, _ = entity.NewPerson("Daniel Queiroz")
-
-func NewMock() (*sql.DB, sqlmock.Sqlmock) {
-	db, mock, err := sqlmock.New()
-	if err != nil {
-		log.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
-	}
-
-	return db, mock
+type PersonRepositoryTestSuite struct {
+	suite.Suite
+	Db *sql.DB
 }
 
-func TestCreatePerson(t *testing.T) {
-	db, mock := NewMock()
+func TestSuite(t *testing.T) {
+	suite.Run(t, new(PersonRepositoryTestSuite))
+}
 
-	repository := NewPersonRepository(db)
+func (suite *PersonRepositoryTestSuite) SetupSuite() {
+	db, err := sql.Open("sqlite3", ":memory:")
+	suite.NoError(err)
 
-	query := "INSERT INTO person \\(id, name, created_at, updated_at, is_active, is_deleted\\) VALUES \\(\\?, \\?, \\?, \\?, \\?, \\?\\)"
+	ddl := `
+	CREATE TABLE persons (
+		id BINARY(36) NOT NULL,
+		name varchar(255) NOT NULL,
+		created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+		updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+		is_active TINYINT DEFAULT 1,
+		is_deleted TINYINT DEFAULT 0,
+		CONSTRAINT persons_pk PRIMARY KEY (id)
+	);
+	`
+	_, err = db.Exec(ddl)
 
-	prep := mock.ExpectPrepare(query)
-	prep.ExpectExec().WithArgs(person.Id, person.Name, person.CreatedAt, person.UpdatedAt, person.IsActive, person.IsDeleted)
+	suite.NoError(err)
+	suite.Db = db
+}
 
-	// query := "INSERT INTO users \\(id, name, email, phone\\) VALUES \\(\\?, \\?, \\?, \\?\\)"
+func (suite *PersonRepositoryTestSuite) TearDownTest() {
+	suite.Db.Close()
+}
 
-	err := repository.CreatePerson(person)
+func (suite *PersonRepositoryTestSuite) TestCreateOnePerson() {
+	person, err := entity.NewPerson("Daniel")
 
-	assert.Nil(t, err)
+	suite.NoError(err)
+	repo := NewPersonRepository(suite.Db)
+
+	err = repo.CreatePerson(person)
+	suite.NoError(err)
+
 }

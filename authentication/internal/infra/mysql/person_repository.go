@@ -16,7 +16,7 @@ func NewPersonRepository(db *sql.DB) *PersonRepository {
 }
 
 func (pr *PersonRepository) CreatePerson(person *entity.Person) error {
-	stmt, err := pr.db.Prepare("insert into person(id, name, created_at, updated_at, is_active, is_deleted) values (?, ?, ?, ?, ?, ?)")
+	stmt, err := pr.db.Prepare("insert into persons (id, name, created_at, updated_at, is_active, is_deleted) values (?, ?, ?, ?, ?, ?)")
 
 	if err != nil {
 		return err
