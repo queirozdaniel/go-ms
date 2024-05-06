@@ -16,7 +16,7 @@ func PagingBy(page, limit int, sort, by string) string {
 	}
 
 	if page > 0 && limit > 0 {
-		return fmt.Sprintf("LIMIT %d OFFSET %d %s", limit, (page-1)*limit, orderBy)
+		return fmt.Sprintf("ORDER BY %s LIMIT %d OFFSET %d", orderBy, limit, (page-1)*limit)
 	} else {
 		return orderBy
 	}

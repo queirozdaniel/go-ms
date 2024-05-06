@@ -26,19 +26,19 @@ func TestPaginationPageAndLimitPassed(t *testing.T) {
 
 	orderQuery := PagingBy(1, 30, "", "")
 
-	expected := fmt.Sprintf("LIMIT %d OFFSET %d %s", 30, 0, order)
+	expected := fmt.Sprintf("ORDER BY %s LIMIT %d OFFSET %d", order, 30, 0)
 
 	if orderQuery != expected {
-		t.Error("err query was wrong, expected: ", orderQuery)
+		t.Error("err query was wrong:", orderQuery, ", expected: ", expected)
 		t.Fail()
 	}
 
 	orderQuery = PagingBy(3, 30, "", "")
 
-	expected = fmt.Sprintf("LIMIT %d OFFSET %d %s", 30, 60, order)
+	expected = fmt.Sprintf("ORDER BY %s LIMIT %d OFFSET %d", order, 30, 60)
 
 	if orderQuery != expected {
-		t.Error("err query was wrong, expected: ", orderQuery)
+		t.Error("err query was wrong:", orderQuery, ", expected: ", expected)
 		t.Fail()
 	}
 }
@@ -48,14 +48,14 @@ func TestPaginationPageAndLimitPassedWrong(t *testing.T) {
 	orderQuery := PagingBy(-1, 30, "", "")
 
 	if orderQuery != expected {
-		t.Error("err query was wrong, expected: ", orderQuery)
+		t.Error("err query was wrong:", orderQuery, ", expected: ", expected)
 		t.Fail()
 	}
 
 	orderQuery = PagingBy(1, -30, "", "")
 
 	if orderQuery != expected {
-		t.Error("err query was wrong, expected: ", orderQuery)
+		t.Error("err query was wrong:", orderQuery, ", expected: ", expected)
 		t.Fail()
 	}
 }
