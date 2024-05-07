@@ -50,6 +50,11 @@ func NewUser(name, email, password string) (*User, error) {
 	return user, err
 }
 
+func (u *User) ValidatePassword(password string) bool {
+	err := bcrypt.CompareHashAndPassword([]byte(u.Password), []byte(password))
+	return err == nil
+}
+
 func (u *User) validate() error {
 
 	if u.Name == "" {

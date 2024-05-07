@@ -44,3 +44,19 @@ func TestNewUserInvalidPassword(t *testing.T) {
 	assert.Nil(t, user)
 	assert.Equal(t, err, entity.ErrPasswordIsRequired)
 }
+
+func TestUserValidPassword(t *testing.T) {
+	user, err := NewUser("dani", "dam@gmail.com", "123123")
+
+	assert.Nil(t, err)
+	assert.NotNil(t, user)
+	assert.True(t, user.ValidatePassword("123123"))
+}
+
+func TestUserInvalidPassword(t *testing.T) {
+	user, err := NewUser("dani", "dam@gmail.com", "123123")
+
+	assert.Nil(t, err)
+	assert.NotNil(t, user)
+	assert.False(t, user.ValidatePassword("11111"))
+}
