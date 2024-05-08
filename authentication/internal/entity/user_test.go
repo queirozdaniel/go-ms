@@ -60,3 +60,13 @@ func TestUserInvalidPassword(t *testing.T) {
 	assert.NotNil(t, user)
 	assert.False(t, user.ValidatePassword("11111"))
 }
+
+func TestUserChangePassword(t *testing.T) {
+	user, err := NewUser("dani", "dam@gmail.com", "123123")
+
+	user.ChangePassword("111222")
+
+	assert.Nil(t, err)
+	assert.NotNil(t, user)
+	assert.True(t, user.ValidatePassword("111222"))
+}

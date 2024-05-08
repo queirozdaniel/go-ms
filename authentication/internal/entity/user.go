@@ -55,6 +55,14 @@ func (u *User) ValidatePassword(password string) bool {
 	return err == nil
 }
 
+func (u *User) ChangePassword(newPassword string) error {
+
+	hashPassword, err := bcrypt.GenerateFromPassword([]byte(newPassword), bcrypt.DefaultCost)
+	u.Password = string(hashPassword)
+
+	return err
+}
+
 func (u *User) validate() error {
 
 	if u.Name == "" {
