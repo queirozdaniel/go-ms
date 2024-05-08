@@ -17,5 +17,9 @@ type (
 
 	IUserRepository interface {
 		CreateUser(user *entity.User) error
+		FindById(id pkg.ID) (*entity.User, error)
+		FindByPersonId(id pkg.ID) (*entity.User, error)
+		ChangePassword(id pkg.ID, oldPassword, newPassword string) error
+		Delete(id pkg.ID) error
 	}
 )

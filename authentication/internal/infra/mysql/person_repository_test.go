@@ -1,55 +1,11 @@
 package mysql
 
 import (
-	"database/sql"
 	"fmt"
-	"testing"
 	"upse/authentication/internal/entity"
-
-	_ "github.com/mattn/go-sqlite3"
-	"github.com/stretchr/testify/suite"
 )
 
-type PersonRepositoryTestSuite struct {
-	suite.Suite
-	Db *sql.DB
-}
-
-func TestSuite(t *testing.T) {
-	suite.Run(t, new(PersonRepositoryTestSuite))
-}
-
-func (suite *PersonRepositoryTestSuite) SetupSuite() {
-	db, err := sql.Open("sqlite3", ":memory:")
-	suite.NoError(err)
-
-	ddl := `
-	CREATE TABLE persons (
-		id BINARY(36) NOT NULL,
-		name varchar(255) NOT NULL,
-		created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-		updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-		is_active TINYINT DEFAULT 1,
-		is_deleted TINYINT DEFAULT 0,
-		CONSTRAINT persons_pk PRIMARY KEY (id)
-	);
-	`
-	_, err = db.Exec(ddl)
-
-	suite.NoError(err)
-	suite.Db = db
-}
-
-func (suite *PersonRepositoryTestSuite) TearDownTest() {
-	_, err := suite.Db.Exec("delete from persons;")
-	suite.NoError(err)
-}
-
-func (suite *PersonRepositoryTestSuite) TearDownSuite() {
-	suite.Db.Close()
-}
-
-func (suite *PersonRepositoryTestSuite) TestCreatePerson() {
+func (suite *RepositoryTestSuite) TestCreatePerson() {
 	person, err := entity.NewPerson("Daniel")
 
 	suite.NoError(err)
@@ -59,7 +15,7 @@ func (suite *PersonRepositoryTestSuite) TestCreatePerson() {
 	suite.NoError(err)
 }
 
-func (suite *PersonRepositoryTestSuite) TestGetPersonById() {
+func (suite *RepositoryTestSuite) TestGetPersonById() {
 	person, err := entity.NewPerson("Daniel")
 
 	suite.NoError(err)
@@ -80,7 +36,7 @@ func (suite *PersonRepositoryTestSuite) TestGetPersonById() {
 	suite.Equal(p.IsDeleted, person.IsDeleted)
 }
 
-func (suite *PersonRepositoryTestSuite) TestGetPersonByName() {
+func (suite *RepositoryTestSuite) TestGetPersonByName() {
 	pJones, _ := entity.NewPerson("Jones da Silva")
 	pLuis, _ := entity.NewPerson("Luis Otavio")
 
@@ -107,7 +63,7 @@ func (suite *PersonRepositoryTestSuite) TestGetPersonByName() {
 	suite.Equal(p.IsDeleted, pJones.IsDeleted)
 }
 
-func (suite *PersonRepositoryTestSuite) TestGetAllPersons() {
+func (suite *RepositoryTestSuite) TestGetAllPersons() {
 
 	repo := NewPersonRepository(suite.Db)
 
@@ -133,7 +89,7 @@ func (suite *PersonRepositoryTestSuite) TestGetAllPersons() {
 	suite.Equal(14, len(persons))
 }
 
-func (suite *PersonRepositoryTestSuite) TestUpdatePersonName() {
+func (suite *RepositoryTestSuite) TestUpdatePersonName() {
 	person, err := entity.NewPerson("Miles Moralles")
 
 	suite.NoError(err)
@@ -150,7 +106,7 @@ func (suite *PersonRepositoryTestSuite) TestUpdatePersonName() {
 	suite.Equal(person.Name, "Peter Parker")
 }
 
-func (suite *PersonRepositoryTestSuite) TestDeletePerson() {
+func (suite *RepositoryTestSuite) TestDeletePerson() {
 	pPeter, _ := entity.NewPerson("Peter Parker")
 	pPeter2, _ := entity.NewPerson("Peter Parker 2")
 
