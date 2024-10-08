@@ -22,4 +22,20 @@ type (
 		ChangePassword(id pkg.ID, oldPassword, newPassword string) error
 		Delete(id pkg.ID) error
 	}
+
+	IRole interface {
+		CreateRole(role *entity.Role) error
+		CreateRoleWithResources(role *entity.Role, resources []*entity.Resource) error
+		FindAll(page, limit int, sort, by string) ([]entity.Role, error)
+		FindById(id pkg.ID) (*entity.Role, error)
+		Delete(id pkg.ID) error
+	}
+
+	IResource interface {
+		CreateResource(resource *entity.Resource) error
+		AddResourceInRole(resourceId pkg.ID, roleId pkg.ID) error
+		FindById(id pkg.ID) (*entity.Resource, error)
+		FindAllByRoleId(roleId pkg.ID) ([]entity.Resource, error)
+		Delete(id pkg.ID) error
+	}
 )
